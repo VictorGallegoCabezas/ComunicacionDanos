@@ -81,7 +81,7 @@ public class BaseTest {
                 "subSuite".equals(label.getName())
             );
 
-            testResult.getLabels().add(ResultsUtils.createParentSuiteLabel("SD_" + fechaActual));
+            testResult.getLabels().add(ResultsUtils.createParentSuiteLabel("CD_" + fechaActual));
             testResult.getLabels().add(ResultsUtils.createSuiteLabel(nombreTest));
         });
 
