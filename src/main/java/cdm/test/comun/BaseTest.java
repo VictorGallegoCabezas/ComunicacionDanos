@@ -48,16 +48,19 @@ public class BaseTest {
         // Fecha aaaammdd
         fechaActual = LocalDate.now().format(DateTimeFormatter.BASIC_ISO_DATE);
 
-        // Carpeta específica para ESTE test: ./evidencias/CDMVT_YYYYMMDD/nombreDelTest
+        // Carpeta específica para ESTE test: ./logs/CD_YYYYMMDD/nombreDelTest
         rutaCarpetaTest = System.getProperty("user.dir")
                 + File.separator + "logs"
-                + File.separator + "CDMVT_" + fechaActual
+                + File.separator + "CD_" + fechaActual
                 + File.separator + nombreTest;
 
         File carpetaTest = new File(rutaCarpetaTest);
         if (!carpetaTest.exists()) {
             carpetaTest.mkdirs();
         }
+
+        // Registrar propiedad de sistema para que BasePage sepa dónde guardar la captura local
+        System.setProperty("rutaCarpetaTest", rutaCarpetaTest);
 
         // Carpeta de descargas dentro de la carpeta del test
         downloadPath = rutaCarpetaTest + File.separator + "descargas";
@@ -73,7 +76,7 @@ public class BaseTest {
         log.info("Iniciando test: " + nombreTest);
         log.info("Carpeta del test creada en: " + rutaCarpetaTest);
 
-        // Configuración de metadatos en Allure para agrupar en el reporte por CDMVT_YYYYMMDD -> nombreTest
+        // Configuración de metadatos en Allure
         Allure.getLifecycle().updateTestCase(testResult -> {
             testResult.getLabels().removeIf(label -> 
                 "parentSuite".equals(label.getName()) || 
@@ -102,11 +105,9 @@ public class BaseTest {
 
     @AfterEach
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-
-        // Limpiar los handlers del logger para que el siguiente test empiece limpio
+        // Solo cerramos los handlers del logger.
+        // NOTA: driver.quit() ha sido trasladado a TestWatcherExtension para evitar
+        // cerrar el navegador antes de la captura de pantalla en fallos.
         if (fileHandler != null) {
             fileHandler.close();
             log.removeHandler(fileHandler);
@@ -128,7 +129,6 @@ public class BaseTest {
         fileHandler = new FileHandler(rutaLog, true);
         fileHandler.setFormatter(new MiFormatoLog());
 
-        // Eliminar handlers antiguos que hayan podido quedar
         for (Handler h : log.getHandlers()) {
             log.removeHandler(h);
         }
@@ -148,7 +148,7 @@ public class BaseTest {
                     + record.getMessage() + System.lineSeparator();
         }
     }
-    
+
     protected void cambiarAFocoNuevaVentana() {
         String original = driver.getWindowHandle();
 

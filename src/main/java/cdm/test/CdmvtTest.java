@@ -19,7 +19,7 @@ public class CdmvtTest extends BaseTest {
     private String pass = System.getProperty("test.pass", "PPIC2511");
 
     @Test
-    public void comunicacionDanosVTTest() throws IOException {
+    public void comunicacionDanosMaterialesVTTest() throws IOException {
 
     	// INICIO Y LOGIN
         LoginPage loginPage = new LoginPage(driver);
