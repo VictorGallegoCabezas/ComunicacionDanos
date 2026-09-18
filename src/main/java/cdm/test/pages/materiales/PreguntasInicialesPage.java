@@ -1,4 +1,4 @@
-package cdm.test.pages;
+package cdm.test.pages.materiales;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

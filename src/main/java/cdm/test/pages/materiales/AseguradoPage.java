@@ -1,5 +1,5 @@
 
-package cdm.test.pages;
+package cdm.test.pages.materiales;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

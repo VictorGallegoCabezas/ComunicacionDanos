@@ -5,14 +5,14 @@ import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 import cdm.test.comun.BaseTest;
-import cdm.test.pages.AseguradoPage;
-import cdm.test.pages.CierrePage;
-import cdm.test.pages.DanosPage;
-import cdm.test.pages.LoginPage;
-import cdm.test.pages.PagosPage;
-import cdm.test.pages.PreguntasInicialesPage;
+import cdm.test.pages.materiales.AseguradoPage;
+import cdm.test.pages.materiales.CierrePage;
+import cdm.test.pages.materiales.DanosPage;
+import cdm.test.pages.materiales.LoginPage;
+import cdm.test.pages.materiales.PagosPage;
+import cdm.test.pages.materiales.PreguntasInicialesPage;
 
-public class CdmvtTest extends BaseTest {
+public class CdmVtTest extends BaseTest {
 
 	// Si existen variables de sistema se usan, si no, toma los valores por defecto
     private String user = System.getProperty("test.user", "PIC2511");
