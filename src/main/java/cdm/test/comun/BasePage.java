@@ -33,9 +33,17 @@ public class BasePage {
     protected WebDriverWait wait;
     protected static Logger log = Logger.getLogger("EvidenciasLogger");
 
+    // Directorio de descargas resuelto de forma absoluta para compatibilidad con ejecuciones desde el JAR
+    protected final File carpetaDescargas = new File("descargas");
+
     public BasePage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        
+        // Garantizar que la carpeta ./descargas exista
+        if (!carpetaDescargas.exists()) {
+            carpetaDescargas.mkdirs();
+        }
     }
 
     public String getTitle() {
@@ -47,6 +55,75 @@ public class BasePage {
         log.info("Navegando a: " + url);
         driver.get(url);
     }
+
+    // =========================================================================
+    // MÉTODOS DE GESTIÓN Y VERIFICACIÓN DE DESCARGAS
+    // =========================================================================
+
+    /**
+     * Espera dinámicamente a que un archivo específico se descargue en la carpeta ./descargas
+     * 
+     * @param nombreArchivo Nombre del archivo esperado (ej: "resumen_siniestro.pdf")
+     * @param timeoutSegundos Tiempo máximo de espera en segundos
+     * @return true si el archivo existe y no está incompleto (.crdownload o .part)
+     */
+    @Step("Comprobar descarga de archivo: {nombreArchivo}")
+    public boolean comprobarArchivoDescargado(String nombreArchivo, int timeoutSegundos) {
+        // Lee la ruta configurada en el BaseTest o usa ./descargas por defecto
+        String rutaDescargas = System.getProperty("downloadPath");
+        File carpetaDescargas = (rutaDescargas != null && !rutaDescargas.isEmpty())
+                ? new File(rutaDescargas)
+                : new File("descargas");
+
+        File archivoEsperado = new File(carpetaDescargas, nombreArchivo);
+
+        int pollingIntervalMs = 500;
+        int totalWaitMs = timeoutSegundos * 1000;
+        int elapsedTimeMs = 0;
+
+        log.info("Esperando descarga de: " + archivoEsperado.getAbsolutePath());
+
+        while (elapsedTimeMs < totalWaitMs) {
+            if (archivoEsperado.exists() && archivoEsperado.length() > 0) {
+                File[] temporales = carpetaDescargas.listFiles((dir, name) -> name.endsWith(".crdownload") || name.endsWith(".part"));
+                if (temporales == null || temporales.length == 0) {
+                    log.info("Archivo descargado correctamente: " + nombreArchivo);
+                    return true;
+                }
+            }
+            try {
+                Thread.sleep(pollingIntervalMs);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return false;
+            }
+            elapsedTimeMs += pollingIntervalMs;
+        }
+
+        log.warning("Timeout (" + timeoutSegundos + "s) alcanzado. El archivo " + nombreArchivo + " no se descargó.");
+        return false;
+    }
+
+    /**
+     * Limpia la carpeta ./descargas antes de iniciar una descarga para evitar falsos positivos
+     */
+    public void limpiarCarpetaDescargas() {
+        if (carpetaDescargas.exists() && carpetaDescargas.isDirectory()) {
+            File[] archivos = carpetaDescargas.listFiles();
+            if (archivos != null) {
+                for (File f : archivos) {
+                    if (f.isFile()) {
+                        f.delete();
+                    }
+                }
+            }
+            log.info("Carpeta ./descargas limpiada con éxito.");
+        }
+    }
+
+    // =========================================================================
+    // MÉTODOS DE CAPTURA DE PANTALLA Y UTILIDADES
+    // =========================================================================
 
     public void guardarCaptura() {
         guardarCaptura("Captura_" + System.currentTimeMillis());

@@ -1,4 +1,4 @@
-package cdm.test.pages.materiales;
+package cdm.test.pages.materiales.vt;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,9 +14,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import cdm.test.comun.BasePage;
 
-public class DanosPage extends BasePage{
+public class DanosVtPage extends BasePage{
 
-	public DanosPage(WebDriver driver) {
+	public DanosVtPage(WebDriver driver) {
 		super(driver);		
 	}
 	
@@ -101,7 +101,7 @@ public class DanosPage extends BasePage{
 		wait.until(ExpectedConditions.elementToBeClickable(aseguradora)).click();
 		
 		
-		driver.findElement(By.name("numeroPoliza")).sendKeys("123456ABCDE");
+		driver.findElement(By.name("numeroPoliza")).sendKeys("5432456ABCDE");
 		
 		driver.findElement(
 			    By.xpath("//a[img[contains(@src,'X099M_flechader.gif')]]")

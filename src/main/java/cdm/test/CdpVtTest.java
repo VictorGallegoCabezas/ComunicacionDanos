@@ -56,7 +56,7 @@ public class CdpVtTest extends BaseTest{
 	}
 	
 	private void login() throws IOException {
-        InicioPage inicioPage = new InicioPage(driver);        
+        InicioPage inicioPage = new InicioPage(driver);
         
         String url = "https://apacheppro.intranet.consorseguros.es/ComunicacionPartesAccidenteVTTest/logon.do";
         inicioPage.navegateTo(url);               

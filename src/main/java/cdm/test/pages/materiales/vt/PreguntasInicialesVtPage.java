@@ -1,4 +1,4 @@
-package cdm.test.pages.materiales;
+package cdm.test.pages.materiales.vt;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -6,12 +6,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import cdm.test.comun.BasePage;
 
-public class PreguntasInicialesPage extends BasePage {
+public class PreguntasInicialesVtPage extends BasePage {
 
     // --- SELECTORES ---
 
-    private By tituloPreguntasIniciales =
-            By.xpath("//div[@class='tr12b' and contains(.,'PREGUNTAS INICIALES')]");
+	private By tituloPreguntasIniciales = 
+            By.xpath("//*[contains(text(), 'PREGUNTAS INICIALES')]");
 
     private By radioGroup1Si =
             By.xpath("//input[@class='radio3' and @name='group1' and @value='si']");
@@ -32,7 +32,7 @@ public class PreguntasInicialesPage extends BasePage {
 
 
     // --- CONSTRUCTOR ---
-    public PreguntasInicialesPage(WebDriver driver) {
+    public PreguntasInicialesVtPage(WebDriver driver) {
         super(driver);
     }
 

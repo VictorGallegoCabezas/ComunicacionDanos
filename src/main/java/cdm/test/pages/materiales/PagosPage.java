@@ -23,7 +23,7 @@ public class PagosPage extends BasePage {
         super(driver);
     }
     
-    public void comprobarPagina() {
+    public void comprobarPaginaVi() {
         // 1. Comprobar si aparece el modal/botón de aceptoDuplicado
         try {
             WebDriverWait waitDuplicado = new WebDriverWait(driver, Duration.ofSeconds(3));
@@ -45,16 +45,14 @@ public class PagosPage extends BasePage {
 
         // 2. Flujo principal: Validar la pantalla DATOS DEL PAGO
         try {
-            WebDriverWait waitPagos = new WebDriverWait(driver, Duration.ofSeconds(15));
-            
-            WebElement elemento = waitPagos.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//div[@class='tr12b'][contains(normalize-space(.),'DATOS DEL PAGO')]")
-                )
-            );
+        	By textoPago = By.xpath("//*[contains(normalize-space(.), 'DATOS DEL PAGO')]");
+
+        	// Recuperar el elemento presente en el DOM
+        	WebElement elementoTexto = wait.until(
+        		    ExpectedConditions.presenceOfElementLocated(textoPago));
 
             assertTrue(
-                elemento.isDisplayed(),
+            		elementoTexto.isDisplayed(),
                 "No se encontró la sección 'DATOS DEL PAGO' en la página"
             );
 
@@ -66,7 +64,7 @@ public class PagosPage extends BasePage {
         }
     }
 
-    public void rellenarYEnviarFormulario() {
+    public void rellenarYEnviarFormulario(String modo) {
     	
     	driver.findElement(By.name("ibanControl")).sendKeys("ES72");
     	driver.findElement(By.name("entidad")).sendKeys("0081");
@@ -77,11 +75,17 @@ public class PagosPage extends BasePage {
     	
     	guardarCaptura("Página pagos");
     	
-    	WebElement boton = wait.until(ExpectedConditions.presenceOfElementLocated(
-		    By.xpath("//img[contains(@onclick, 'validoPago')]")
-		));
-
-		((JavascriptExecutor) driver).executeScript("arguments[0].click();", boton);
+    	if (modo.equalsIgnoreCase("VI")) {
+    		By btnAceptarPago = By.xpath("//input[@value='Aceptar' and contains(@onclick, 'validoPago')]");
+    		WebElement boton = wait.until(ExpectedConditions.elementToBeClickable(btnAceptarPago));
+    		boton.click();
+    	} else {
+	    	WebElement boton = wait.until(ExpectedConditions.presenceOfElementLocated(
+			    By.xpath("//img[contains(@onclick, 'validoPago')]")
+			));
+	
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", boton);
+    	}
 
         
     }
@@ -99,4 +103,6 @@ public class PagosPage extends BasePage {
             wait.until(ExpectedConditions.elementToBeClickable(botonContinuar)).click();
         }
     }
+    
+    
 }

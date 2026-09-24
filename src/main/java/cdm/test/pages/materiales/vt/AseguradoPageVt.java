@@ -1,5 +1,5 @@
 
-package cdm.test.pages.materiales;
+package cdm.test.pages.materiales.vt;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,11 +14,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import cdm.test.comun.BasePage;
 
 
-public class AseguradoPage extends BasePage{
+public class AseguradoPageVt extends BasePage{
 	
 	protected static java.util.logging.Logger log = java.util.logging.Logger.getLogger("EvidenciasLogger");
 
-	public AseguradoPage(WebDriver driver) {
+	public AseguradoPageVt(WebDriver driver) {
 		super(driver);
 	}
 	

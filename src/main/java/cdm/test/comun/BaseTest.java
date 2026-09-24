@@ -62,7 +62,7 @@ public class BaseTest {
         // Registrar propiedad de sistema para que BasePage sepa dónde guardar la captura local
         System.setProperty("rutaCarpetaTest", rutaCarpetaTest);
 
-        // Carpeta de descargas dentro de la carpeta del test
+        // Carpeta de descargas específica del test
         downloadPath = rutaCarpetaTest + File.separator + "descargas";
         File dirDescargas = new File(downloadPath);
         if (!dirDescargas.exists()) {
@@ -71,10 +71,14 @@ public class BaseTest {
             FileUtils.cleanDirectory(dirDescargas);
         }
 
+        // Registrar la ruta de descargas para que BasePage la lea dinámicamente
+        System.setProperty("downloadPath", downloadPath);
+
         // Logger específico para la carpeta de este test
         inicializarLogger(rutaCarpetaTest, fechaActual);
         log.info("Iniciando test: " + nombreTest);
         log.info("Carpeta del test creada en: " + rutaCarpetaTest);
+        log.info("Carpeta de descargas configurada en: " + downloadPath);
 
         // Configuración de metadatos en Allure
         Allure.getLifecycle().updateTestCase(testResult -> {
@@ -93,7 +97,8 @@ public class BaseTest {
         ChromeOptions options = new ChromeOptions();
 
         Map<String, Object> prefs = new HashMap<>();
-        prefs.put("download.default_directory", downloadPath);
+        // Asignar ruta absoluta resuelta para garantizar compatibilidad al ejecutar desde .jar
+        prefs.put("download.default_directory", new File(downloadPath).getAbsolutePath());
         prefs.put("download.prompt_for_download", false);
         prefs.put("plugins.always_open_pdf_externally", true);
 
@@ -105,9 +110,6 @@ public class BaseTest {
 
     @AfterEach
     public void tearDown() {
-        // Solo cerramos los handlers del logger.
-        // NOTA: driver.quit() ha sido trasladado a TestWatcherExtension para evitar
-        // cerrar el navegador antes de la captura de pantalla en fallos.
         if (fileHandler != null) {
             fileHandler.close();
             log.removeHandler(fileHandler);
@@ -120,6 +122,10 @@ public class BaseTest {
 
     public String getRutaCarpetaTest() {
         return rutaCarpetaTest;
+    }
+
+    public String getDownloadPath() {
+        return downloadPath;
     }
 
     protected void inicializarLogger(String rutaCarpeta, String fecha) throws IOException {
