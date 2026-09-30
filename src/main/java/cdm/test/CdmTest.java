@@ -8,7 +8,7 @@ import cdm.test.comun.BaseTest;
 import cdm.test.pages.materiales.CierrePage;
 import cdm.test.pages.materiales.LoginPage;
 import cdm.test.pages.materiales.PagosPage;
-import cdm.test.pages.materiales.vi.AseguradoPageVi;
+import cdm.test.pages.materiales.vi.AseguradoViPage;
 import cdm.test.pages.materiales.vi.DanosViPage;
 import cdm.test.pages.materiales.vi.DatosDanosViPage;
 import cdm.test.pages.materiales.vi.PreguntasInicialesViPage;
@@ -18,7 +18,7 @@ import cdm.test.pages.materiales.vt.AseguradoPageVt;
 import cdm.test.pages.materiales.vt.DanosVtPage;
 import cdm.test.pages.materiales.vt.PreguntasInicialesVtPage;
 
-public class CdmVtTest extends BaseTest {
+public class CdmTest extends BaseTest {
 
 	// Si existen variables de sistema se usan, si no, toma los valores por defecto
     private String user = System.getProperty("test.user", "PIC2511");
@@ -96,7 +96,7 @@ public class CdmVtTest extends BaseTest {
         ProteccionDatosViPage proteccion = new ProteccionDatosViPage(driver);
         proteccion.radiosYAceptar();
 
-        AseguradoPageVi asegurado = new AseguradoPageVi(driver);
+        AseguradoViPage asegurado = new AseguradoViPage(driver);
         asegurado.rellenarYEnviarFormulario();
         
         DanosViPage danos = new DanosViPage(driver);

@@ -57,7 +57,7 @@ public class DanosViPage extends BasePage {
     
     private void rellenarFecha() {
         // Obtener la fecha de hace 90 días
-        LocalDate ayer = LocalDate.now().minusDays(90);
+        LocalDate ayer = LocalDate.now().minusDays(1);
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String fechaAyer = ayer.format(formato);
 
