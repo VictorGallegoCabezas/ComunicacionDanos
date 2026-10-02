@@ -101,8 +101,17 @@ public class BaseTest {
         prefs.put("download.default_directory", new File(downloadPath).getAbsolutePath());
         prefs.put("download.prompt_for_download", false);
         prefs.put("plugins.always_open_pdf_externally", true);
+        
+        // Configuración específica para descargas automáticas sin bloqueos de seguridad (.jnlp)
+        prefs.put("download.directory_upgrade", true);
+        prefs.put("safebrowsing.enabled", true);
+        prefs.put("safebrowsing.disable_download_protection", true);
 
         options.setExperimentalOption("prefs", prefs);
+        
+        // Argumentos de seguridad para Chrome
+        options.addArguments("--safebrowsing-disable-download-protection");
+        options.addArguments("--safebrowsing-disable-extension-blacklist");
 
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();

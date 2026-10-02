@@ -1,4 +1,4 @@
-package cdm.test.pages.personales;
+package cdm.test.pages.partesAccidentes.vt;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,17 +14,17 @@ public class AccidentePage extends BasePage {
 		super(driver);
 	}
 	
-	public void rellenarYEnviar() {
+	public void rellenarYEnviar(String modo) throws InterruptedException {
 		
 		//Localidad
 		WebElement localidadAyuda = wait.until(
-			    ExpectedConditions.elementToBeClickable(By.id("locOcurrencia"))
-			);
+		    ExpectedConditions.elementToBeClickable(By.id("locOcurrencia"))
+		);
 		localidadAyuda.click();
 		
 		WebElement localidadAyuda2 = wait.until(
-			    ExpectedConditions.elementToBeClickable(By.id("imagenBuscar"))
-			);
+		    ExpectedConditions.elementToBeClickable(By.id("imagenBuscar"))
+		);
 		localidadAyuda2.click();
 		
 		WebElement filaLocalidad = wait.until(
@@ -33,16 +33,14 @@ public class AccidentePage extends BasePage {
 		filaLocalidad.click();
 		
 		//--------------------------------calle
-		WebElement municipioAyuda = wait.until(
-			    ExpectedConditions.elementToBeClickable(By.id("calOcurrencia"))
-			);
-		municipioAyuda.click();
-		
-		WebElement municipioBuscar = wait.until(
+		wait.until(
+		    ExpectedConditions.elementToBeClickable(By.id("calOcurrencia"))
+		).click();
+		Thread.sleep(3000);
+		wait.until(
 		    ExpectedConditions.elementToBeClickable(By.id("imagenBuscar"))
-		);
-		municipioBuscar.click();
-		
+		).click();
+				
 		WebElement filaCalle = wait.until(
 		    ExpectedConditions.elementToBeClickable(
 		        By.xpath("//tr[contains(@onclick, 'cargoCalle') and contains(@onclick, 'NTRA. SRA. DE LA ASUNCION')]")
@@ -104,13 +102,18 @@ public class AccidentePage extends BasePage {
 		numeroBienesCampo.clear();
 		numeroBienesCampo.sendKeys("1");
 		//-------------------------------- Botón Aceptar
-		WebElement botonAceptar = wait.until(
-		    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@src, 'X099M_aceptar.gif')]"))
-		);
+		WebElement botonAceptar = null;
+		if (modo.equalsIgnoreCase("VT")) {
+			botonAceptar = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@src, 'X099M_aceptar.gif')]"))
+			);
+		} else if (modo.equalsIgnoreCase("VI")) {			
+			botonAceptar = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("/html/body/form/div[3]/div/div[2]/input"))
+			);
+		}
 		guardarCaptura("Datos accidente");
 		botonAceptar.click();
-		
-		
 		
 	}
 

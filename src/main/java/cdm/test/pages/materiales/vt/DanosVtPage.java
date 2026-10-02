@@ -52,7 +52,7 @@ public class DanosVtPage extends BasePage{
 	
 	private void rellenarFecha() {
 		// Obtener la fecha de ayer
-		LocalDate ayer = LocalDate.now().minusDays(1);
+		LocalDate ayer = LocalDate.now().minusDays(30);
 		DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		String fechaAyer = ayer.format(formato);
 

@@ -1,4 +1,4 @@
-package cdm.test.pages.personales;
+package cdm.test.pages.partesAccidentes.vt;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +17,7 @@ public class PreguntasInicialesPage extends BasePage {
 		super(driver);
 	}
 	
-	public void rellenarFormularioYEnviar(String plate) {
+	public void rellenarFormularioYEnviar(String plate, String modo) {
 		
 		WebElement matriculaCampo = wait.until(
 		    ExpectedConditions.visibilityOfElementLocated(By.name("matricula"))
@@ -28,10 +28,16 @@ public class PreguntasInicialesPage extends BasePage {
 		    ExpectedConditions.visibilityOfElementLocated(By.name("fechaAccidente"))
 		);		
 		fechaAccidenteCampo.sendKeys(calculaFecha());
-		//-----------------------------		
-		WebElement botonAceptar = wait.until(
-		    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@src, 'X099M_aceptar.gif')]"))
-		);
+		//-----------------------------
+		WebElement botonAceptar = null;
+		if (modo.equalsIgnoreCase("VT")) {
+			botonAceptar = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@src, 'X099M_aceptar.gif')]"))
+			);
+		} else if (modo.equalsIgnoreCase("VI")) {
+			botonAceptar = wait.until(
+					ExpectedConditions.elementToBeClickable(By.cssSelector("input[type='submit'][value='Aceptar']")));
+		}
 		botonAceptar.click();
 		//-----------------------------		
 		// 1. Esperar a que el elemento select esté visible
@@ -43,10 +49,16 @@ public class PreguntasInicialesPage extends BasePage {
 		Select comboGrabacion = new Select(selectElement);
 		comboGrabacion.selectByValue("SI");
 		//-----------------------------
-		
-		WebElement botonAceptar2 = wait.until(
-		    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoPreguntasIniciales')]"))
-		);
+		WebElement botonAceptar2 = null;
+		if (modo.equalsIgnoreCase("VT")) {
+			botonAceptar2 = wait.until(
+					ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoPreguntasIniciales')]"))
+			);
+		} else if (modo.equalsIgnoreCase("VI")){
+			botonAceptar2 = wait.until(
+					ExpectedConditions.elementToBeClickable(By.xpath("/html/body/form/div[3]/div/div/input"))
+			);
+		}
 		guardarCaptura("Preguntas Iniciales");
 		botonAceptar2.click();
 		

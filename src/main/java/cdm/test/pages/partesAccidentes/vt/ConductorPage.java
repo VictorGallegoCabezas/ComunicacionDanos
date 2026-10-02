@@ -1,4 +1,4 @@
-package cdm.test.pages.personales;
+package cdm.test.pages.partesAccidentes.vt;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +14,7 @@ public class ConductorPage extends BasePage {
 		super(driver);
 	}
 	
-	public void rellenarYEnviar() {
+	public void rellenarYEnviar(String modo) {
 		// 1. Esperar a que el desplegable sea visible
 		WebElement selectTipoConductor = wait.until(
 		    ExpectedConditions.visibilityOfElementLocated(By.name("tipoConductor"))
@@ -24,9 +24,18 @@ public class ConductorPage extends BasePage {
 		Select comboConductor = new Select(selectTipoConductor);
 		comboConductor.selectByValue("H");
 		//--------------------------------------------------
-		WebElement botonAceptarConductor = wait.until(
-		    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoConductor')]"))
-		);
+		WebElement botonAceptarConductor = null;
+		if (modo.equalsIgnoreCase("VT")) {
+			botonAceptarConductor = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoConductor')]"))
+			);
+		} else if (modo.equalsIgnoreCase("VI")) {
+			botonAceptarConductor = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("/html/body/form/div[3]/div/div[2]/input"))
+			);
+		}		
+			
+		guardarCaptura("Tipo conductor");
 		botonAceptarConductor.click();
 		
 	}

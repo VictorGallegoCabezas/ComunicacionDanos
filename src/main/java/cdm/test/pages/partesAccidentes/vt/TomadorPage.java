@@ -1,4 +1,4 @@
-package cdm.test.pages.personales;
+package cdm.test.pages.partesAccidentes.vt;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -14,7 +14,7 @@ public class TomadorPage extends BasePage{
 		super(driver);
 	}
 	
-	public void rellenarYEnviar() {
+	public void rellenarYEnviar(String modo) {
 		// 1. Esperar a que el desplegable sea visible
 		WebElement selectTipoPersona = wait.until(
 		    ExpectedConditions.visibilityOfElementLocated(By.name("tipoPersona"))
@@ -24,9 +24,16 @@ public class TomadorPage extends BasePage{
 		Select comboPersona = new Select(selectTipoPersona);
 		comboPersona.selectByValue("T");
 		//-------------------------------------------------------
-		WebElement botonAceptarTomador = wait.until(
-		    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoTomador')]"))
-		);
+		WebElement botonAceptarTomador = null;
+		if (modo.equalsIgnoreCase("VT")) {
+			botonAceptarTomador = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoTomador')]"))
+			);
+		} else if (modo.equalsIgnoreCase("VI")) {
+			botonAceptarTomador = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("/html/body/form/div[3]/div/div[2]/input"))
+			);
+		}
 		guardarCaptura("Seleccion tipo persona");
 		botonAceptarTomador.click();
 	}

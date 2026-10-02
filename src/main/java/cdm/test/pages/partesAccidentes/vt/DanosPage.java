@@ -1,8 +1,5 @@
-package cdm.test.pages.personales;
+package cdm.test.pages.partesAccidentes.vt;
 
-import java.util.List;
-
-import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -16,13 +13,14 @@ public class DanosPage extends BasePage {
 		super(driver);
 	}
 
-	public void rellenarYEnviar() {
+	public void rellenarYEnviar(String modo) {
 		// Localizamos el elemento
-		List<WebElement> botonesEliminar = driver.findElements(
-		    By.xpath("//img[contains(@onclick, 'eliminarBien') and contains(@src, 'X099M_borrarFichero.gif')]")
-		);
+		WebElement confirmacionResumen = wait.until(ExpectedConditions.visibilityOfElementLocated(
+				By.xpath("//img[contains(@onclick, 'eliminarBien') and contains(@src, 'X099M_borrarFichero.gif')]")
+			    
+			));
 
-		if (botonesEliminar.isEmpty()) {
+		if (!confirmacionResumen.isDisplayed()) {
 		    // ---------------- SI NO EXISTE EL ELEMENTO ----------------
 			//-------------------------------- 1. Intentar hacer clic en Añadir Bien
 			WebElement enlaceAnadirBien = wait.until(
@@ -36,23 +34,24 @@ public class DanosPage extends BasePage {
 			descripcionBienCampo.sendKeys("He roto una farola en la calle");
 
 			WebElement botonAceptarBien = wait.until(
-			    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoBien')]"))
+			    ExpectedConditions.elementToBeClickable(By.name("victima2"))
 			);
 			botonAceptarBien.click();
 		}
 		//-------------------------------- Botón Aceptar Daños (Siempre se ejecuta)
-		WebElement botonAceptarDanos = wait.until(
-		    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoDanos')]"))
-		);
-		guardarCaptura("Datos daño");
+		WebElement botonAceptarDanos = null;
+		if (modo.equalsIgnoreCase("VT")) {
+			botonAceptarDanos = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("//img[contains(@onclick, 'validoDanos')]"))
+			);
+		} else if (modo.equalsIgnoreCase("VI")) {
+			botonAceptarDanos = wait.until(
+			    ExpectedConditions.elementToBeClickable(By.xpath("/html/body/form/div[3]/div/div[2]/input"))
+			);
+		}		
 		
-		botonAceptarDanos.click();
-
-		//-------------------------------- 5. Aceptar Alerta Nativa final de confirmación
-		
-		wait.until(ExpectedConditions.alertIsPresent());		
-		Alert alerta = driver.switchTo().alert();
-		alerta.accept();
+		guardarCaptura("Datos daño");		
+		botonAceptarDanos.click();		
 		
 	}
 

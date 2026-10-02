@@ -60,6 +60,12 @@
 	    <artifactId>ashot</artifactId>
 	    <version>1.5.4</version>
 	</dependency>
+	
+	<dependency>
+	    <groupId>com.sikulix</groupId>
+	    <artifactId>sikulixapi</artifactId>
+	    <version>2.0.5</version>
+	</dependency>
   </dependencies>
 
   <build>

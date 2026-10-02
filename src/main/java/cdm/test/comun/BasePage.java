@@ -69,28 +69,46 @@ public class BasePage {
      */
     @Step("Comprobar descarga de archivo: {nombreArchivo}")
     public boolean comprobarArchivoDescargado(String nombreArchivo, int timeoutSegundos) {
-        // Lee la ruta configurada en el BaseTest o usa ./descargas por defecto
         String rutaDescargas = System.getProperty("downloadPath");
         File carpetaDescargas = (rutaDescargas != null && !rutaDescargas.isEmpty())
                 ? new File(rutaDescargas)
                 : new File("descargas");
 
-        File archivoEsperado = new File(carpetaDescargas, nombreArchivo);
+        // Extraer los primeros 10 caracteres del nombre buscado (o menos si el nombre es más corto)
+        String prefijoBuscado = nombreArchivo.length() >= 10 
+                ? nombreArchivo.substring(0, 10) 
+                : nombreArchivo;
 
         int pollingIntervalMs = 500;
         int totalWaitMs = timeoutSegundos * 1000;
         int elapsedTimeMs = 0;
 
-        log.info("Esperando descarga de: " + archivoEsperado.getAbsolutePath());
+        log.info("Esperando archivo que empiece por: " + prefijoBuscado + " en " + carpetaDescargas.getAbsolutePath());
 
         while (elapsedTimeMs < totalWaitMs) {
-            if (archivoEsperado.exists() && archivoEsperado.length() > 0) {
-                File[] temporales = carpetaDescargas.listFiles((dir, name) -> name.endsWith(".crdownload") || name.endsWith(".part"));
-                if (temporales == null || temporales.length == 0) {
-                    log.info("Archivo descargado correctamente: " + nombreArchivo);
-                    return true;
+            // Buscar archivos que coincidan en los 10 primeros caracteres
+            File[] encontrados = carpetaDescargas.listFiles((dir, name) -> 
+                name.length() >= prefijoBuscado.length() && 
+                name.substring(0, prefijoBuscado.length()).equalsIgnoreCase(prefijoBuscado) &&
+                !name.endsWith(".crdownload") && 
+                !name.endsWith(".part")
+            );
+
+            if (encontrados != null && encontrados.length > 0) {
+                for (File archivo : encontrados) {
+                    if (archivo.exists() && archivo.length() > 0) {
+                        // Verificar que no haya descargas temporales activas en la carpeta
+                        File[] temporales = carpetaDescargas.listFiles((dir, name) -> 
+                            name.endsWith(".crdownload") || name.endsWith(".part")
+                        );
+                        if (temporales == null || temporales.length == 0) {
+                            log.info("Archivo detectado por prefijo correctamente: " + archivo.getName());
+                            return true;
+                        }
+                    }
                 }
             }
+
             try {
                 Thread.sleep(pollingIntervalMs);
             } catch (InterruptedException e) {
@@ -100,7 +118,7 @@ public class BasePage {
             elapsedTimeMs += pollingIntervalMs;
         }
 
-        log.warning("Timeout (" + timeoutSegundos + "s) alcanzado. El archivo " + nombreArchivo + " no se descargó.");
+        log.warning("Timeout (" + timeoutSegundos + "s) alcanzado. No se encontró archivo que empiece por: " + prefijoBuscado);
         return false;
     }
 

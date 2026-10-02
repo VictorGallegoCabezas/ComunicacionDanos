@@ -76,7 +76,7 @@ public class CdmTest extends BaseTest {
         CierrePage cierre = new CierrePage(driver);        
         cierre.comprobarPagina();
         cierre.descargarPdf();
-        cierre.comprobarDescargaPdf();
+        cierre.comprobarDescargaPdf("cdm");
         
     }
     
@@ -120,6 +120,6 @@ public class CdmTest extends BaseTest {
         CierrePage cierre = new CierrePage(driver);        
         cierre.comprobarPagina();
         cierre.descargarPdf();
-        cierre.comprobarDescargaPdf();
+        cierre.comprobarDescargaPdf("cdm");
     }
 }

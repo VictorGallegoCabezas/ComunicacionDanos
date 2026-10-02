@@ -56,9 +56,9 @@ public class CierrePage extends BasePage {
 		boton.click();
 	}
 	
-	public void comprobarDescargaPdf() {
+	public void comprobarDescargaPdf(String modo) {
 	    // 1. Recuperar el nombre
-	    String nombreFichero = obtenerNombrePdf();
+	    String nombreFichero = obtenerNombrePdf(modo);
 
 	    // 2. Comprobación directa (ej. esperando hasta 15 segundos)
 	    boolean descargado = this.comprobarArchivoDescargado(nombreFichero, 15);
@@ -67,9 +67,13 @@ public class CierrePage extends BasePage {
 	    Assertions.assertTrue(descargado, "El archivo 'informe_mensual.pdf' no se ha descargado correctamente.");
 	}
 
-	private String obtenerNombrePdf() {
-	    // Localizador por clase
-	    By locator = By.cssSelector("label.navegacionRojo");
+	private String obtenerNombrePdf(String modo) {
+		By locator = null;
+		if(modo.equalsIgnoreCase("cdm")) {
+			locator = By.cssSelector("label.navegacionRojo");
+		} else if(modo.equalsIgnoreCase("cdp")) {
+			locator = By.cssSelector("label.error");
+		}
 	    
 	    // Obtener el elemento y su texto
 	    WebElement elemento = driver.findElement(locator);
@@ -82,7 +86,12 @@ public class CierrePage extends BasePage {
 	    textoLimpio = textoLimpio.replace("/", "");
 	    
 	    // 3. Formatear y devolver
-	    String nombreArchivo = "Solicitud_" + textoLimpio + ".pdf";
+	    String nombreArchivo = "";
+	    if(modo.equalsIgnoreCase("cdm")) {
+	    	nombreArchivo = "Solicitud_" + textoLimpio + ".pdf";
+	    } else if(modo.equalsIgnoreCase("cdp")) {
+	    	nombreArchivo = "Parte" + textoLimpio + ".pdf";
+	    }
 	    
 	    log.info("Número de solicitud procesado: " + textoLimpio);
 	    log.info("Nombre de archivo esperado: " + nombreArchivo);

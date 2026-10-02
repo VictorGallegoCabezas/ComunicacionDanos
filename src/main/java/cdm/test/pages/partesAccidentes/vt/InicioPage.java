@@ -1,4 +1,4 @@
-package cdm.test.pages.personales;
+package cdm.test.pages.partesAccidentes.vt;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -13,7 +13,7 @@ public class InicioPage extends BasePage{
 		super(driver);
 	}
 	
-	public void login(String user, String pass) {
+	public void loginVt(String user, String pass) {
 		
 		// 1. Esperar a que el campo sea visible y obtener el elemento
 		WebElement usuarioCampo = wait.until(
@@ -37,6 +37,6 @@ public class InicioPage extends BasePage{
 
         botonEntrar.click();	
 		
-	}
+	}	
 
 }
