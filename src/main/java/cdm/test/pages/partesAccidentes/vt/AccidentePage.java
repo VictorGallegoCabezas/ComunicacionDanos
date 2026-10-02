@@ -1,6 +1,7 @@
 package cdm.test.pages.partesAccidentes.vt;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -33,20 +34,21 @@ public class AccidentePage extends BasePage {
 		filaLocalidad.click();
 		
 		//--------------------------------calle
-		wait.until(
-		    ExpectedConditions.elementToBeClickable(By.id("calOcurrencia"))
-		).click();
-		Thread.sleep(3000);
-		wait.until(
-		    ExpectedConditions.elementToBeClickable(By.id("imagenBuscar"))
-		).click();
-				
-		WebElement filaCalle = wait.until(
-		    ExpectedConditions.elementToBeClickable(
-		        By.xpath("//tr[contains(@onclick, 'cargoCalle') and contains(@onclick, 'NTRA. SRA. DE LA ASUNCION')]")
-		    )
-		);
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("calOcurrencia"))).click();
+
+		WebElement ayudaBotonCalle = wait.until(ExpectedConditions.elementToBeClickable(By.id("imagenBuscar")));
+
+		// Forzamos el clic mediante JavaScript
+		JavascriptExecutor js = (JavascriptExecutor) driver;
+		js.executeScript("arguments[0].click();", ayudaBotonCalle);
+
+		// Esperamos la fila de la calle normalmente
+		WebElement filaCalle = wait.until(ExpectedConditions.elementToBeClickable(
+		    By.xpath("//tr[contains(@onclick, 'cargoCalle') and contains(@onclick, 'NTRA. SRA. DE LA ASUNCION')]")
+		));
 		filaCalle.click();
+		
+		
 		//--------------------------------numero
 		WebElement numeroCampo = wait.until(
 		    ExpectedConditions.visibilityOfElementLocated(By.name("numeroOcurrencia"))

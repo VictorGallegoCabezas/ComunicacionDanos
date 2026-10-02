@@ -22,9 +22,10 @@ public class CdmTest extends BaseTest {
 
 	// Si existen variables de sistema se usan, si no, toma los valores por defecto
     private String user = System.getProperty("test.user", "PIC2511");
-    private String pass = System.getProperty("test.pass", "PPIC2511");
+    private String pass = System.getProperty("test.pass", "NPIC2511");
+    private String urlCDM = "https://consorcio:CcsCast3llaNa!@preapps.consorseguros.es/ComunicacionDanosMaterialesVITest";
 
-    //@Test
+    @Test
     public void comunicacionDanosMaterialesVTTest() throws IOException {
 
     	// INICIO Y LOGIN
@@ -76,18 +77,13 @@ public class CdmTest extends BaseTest {
         CierrePage cierre = new CierrePage(driver);        
         cierre.comprobarPagina();
         cierre.descargarPdf();
-        cierre.comprobarDescargaPdf("cdm");
-        
+        cierre.comprobarDescargaPdf("cdm");        
     }
     
     @Test
-    public void comunicacionDanosMaterialesVITest() {
-    	LoginPage loginPage = new LoginPage(driver);
-        String url = "https://consorcio:CcsCast3llaNa!@preapps.consorseguros.es/ComunicacionDanosMaterialesVITest";
-        loginPage.navegateTo(url);
-        log.info("Abriendo " + url);
-        loginPage.botonEntrar();       
-        
+    public void comunicacionDanosMaterialesVITest() throws InterruptedException {
+    	
+    	loginCertificado(urlCDM);        
         
         // PREGUNTAS INICIALES Y ACEPTAR GRABACION
         PreguntasInicialesViPage preguntasInicialesPage = new PreguntasInicialesViPage(driver);
@@ -114,8 +110,6 @@ public class CdmTest extends BaseTest {
         ResumenViPage resumen = new ResumenViPage(driver);
         resumen.comprobarPagina();
         resumen.aceptar();
-        
-        
         
         CierrePage cierre = new CierrePage(driver);        
         cierre.comprobarPagina();
